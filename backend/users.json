@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "username": "aaaa",
+    "email": "abc@gmail.com",
+    "name": "abcd",
+    "password": "123456"
+  },
+  {
+    "id": 2,
+    "username": "MD",
+    "email": "ovmahadev@gmail.com",
+    "name": "MAHADEV",
+    "password": "123456"
+  },
+  {
+    "id": 3,
+    "username": "GreenRider",
+    "email": "mahadev@gmail.com",
+    "name": "MAHADEV O V",
+    "password": "maha12345"
+  },
+  {
+    "id": 4,
+    "username": "mahadev",
+    "email": "mahadev@gmail.con",
+    "name": "MAHADEV O V",
+    "password": "123456"
+  },
+  {
+    "id": 5,
+    "username": "pappu",
+    "email": "priya@gmail.com",
+    "name": "Pathmapriya E P",
+    "password": "123456"
+  },
+  {
+    "id": 6,
+    "username": "dd",
+    "email": "dev@gmail.com",
+    "name": "dev",
+    "password": "123456"
+  },
+  {
+    "id": 7,
+    "username": "jithina",
+    "email": "jithina1@gmail.com",
+    "name": "jithina",
+    "password": "jithina@1"
+  },
+  {
+    "id": 8,
+    "username": "baaaaaaaaasil",
+    "email": "baaaaaaaaasil@gmail.com",
+    "name": "basil",
+    "password": "123456abc"
+  },
+  {
+    "id": 9,
+    "username": "ajay",
+    "email": "ajaysurendran14003@gmail.com",
+    "name": "ajay surendran",
+    "password": "ajaysura010"
+  }
+]

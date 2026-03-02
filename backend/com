@@ -1,0 +1,108 @@
+"""Compute edge costs with proper normalization."""
+import pickle
+
+GRAPH_FILE = "backend/southern_zone_graph.gpickle"
+
+print("Loading graph...")
+with open(GRAPH_FILE, 'rb') as f:
+    G = pickle.load(f)
+
+print("\n=== STEP 1: Compute global min/max ===")
+
+# Collect all edge attributes
+lengths = []
+travel_times = []
+emissions = []
+
+for u, v, data in G.edges(data=True):
+    length = data.get('length', 100)
+    travel_time = data.get('travel_time', 10)
+    
+    # PROPER emission formula: depends on speed and length
+    # CO2 emission = fuel_consumption_per_km * distance_km
+    # More realistic: emission factor * distance_km * (1/speed_factor)
+    # Higher speed = less emission per km (more efficient)
+    # But idling in traffic = more emission
+    
+    speed_kph = data.get('speed_kph', 40)
+    length_km = length / 1000
+    
+    # Emission formula: g CO2/km varies with speed
+    # At low speeds (20-30 km/h): ~220 g/km (city traffic)
+    # At medium speeds (40-60 km/h): ~180 g/km
+    # At high speeds (80+ km/h): ~200 g/km (highway)
+    if speed_kph < 30:
+        emission_factor = 220  # city traffic
+    elif speed_kph < 50:
+        emission_factor = 180   # normal
+    elif speed_kph < 80:
+        emission_factor = 200   # highway
+    else:
+        emission_factor = 210  # fast highway
+    
+    emission_kg = (emission_factor * length_km) / 1000  # convert to kg
+    
+    lengths.append(length)
+    travel_times.append(travel_time)
+    emissions.append(emission_kg)
+
+print(f"length: min={min(lengths):.2f}, max={max(lengths):.2f}")
+print(f"travel_time: min={min(travel_times):.2f}, max={max(travel_times):.2f}")
+print(f"emission: min={min(emissions):.4f}, max={max(emissions):.4f}")
+
+# Store min/max for normalization
+length_min, length_max = min(lengths), max(lengths)
+time_min, time_max = min(travel_times), max(travel_times)
+emission_min, emission_max = min(emissions), max(emissions)
+
+print("\n=== STEP 2: Compute normalized costs ===")
+
+eco_costs = []
+balanced_costs = []
+quickest_costs = []
+
+for u, v, data in G.edges(data=True):
+    length = data.get('length', 100)
+    travel_time = data.get('travel_time', 10)
+    speed_kph = data.get('speed_kph, 40)
+    
+    # Compute emission with proper formula
+    length_km = length / 1000
+    if speed_kph < 30:
+        emission_factor = 220
+    elif speed_kph < 50:
+        emission_factor = 180
+    elif speed_kph < 80:
+        emission_factor = 200
+    else:
+        emission_factor = 210
+    emission_kg = (emission_factor * length_km) / 1000
+    
+    # Normalize to [0, 1]
+    length_norm = (length - length_min) / (length_max - length_min) if length_max > length_min else 0
+    time_norm = (travel_time - time_min) / (time_max - time_min) if time_max > time_min else 0
+    emission_norm = (emission_kg - emission_min) / (emission_max - emission_min) if emission_max > emission_min else 0
+    
+    # Compute route costs
+    eco_cost = 0.6 * emission_norm + 0.3 * length_norm + 0.1 * time_norm
+    balanced_cost = 0.33 * emission_norm + 0.33 * length_norm + 0.34 * time_norm
+    quickest_cost = 0.7 * time_norm + 0.2 * length_norm + 0.1 * emission_norm
+    
+    eco_costs.append(eco_cost)
+    balanced_costs.append(balanced_cost)
+    quickest_costs.append(quickest_cost)
+
+print("\n=== STEP 3: Cost Statistics ===")
+print(f"Eco:       Min={min(eco_costs):.4f} Max={max(eco_costs):.4f} Mean={sum(eco_costs)/len(eco_costs):.4f}")
+print(f"Balanced:  Min={min(balanced_costs):.4f} Max={max(balanced_costs):.4f} Mean={sum(balanced_costs)/len(balanced_costs):.4f}")
+print(f"Quickest:  Min={min(quickest_costs):.4f} Max={max(quickest_costs):.4f} Mean={sum(quickest_costs)/len(quickest_costs):.4f}")
+
+print("\n=== EMISSION FORMULA USED ===")
+print("emission_kg = (emission_factor * length_km) / 1000")
+print("where emission_factor depends on speed_kph:")
+print("  speed_kph < 30: 220 g/km (city traffic)")
+print("  30 <= speed_kph < 50: 180 g/km (normal)")
+print("  50 <= speed_kph < 80: 200 g/km (highway)")
+print("  speed_kph >= 80: 210 g/km (fast highway)")
+print("\nThis ensures emission is NOT just length * constant!")
+print("Emission depends on BOTH distance AND speed!")

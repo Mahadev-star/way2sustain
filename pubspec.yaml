@@ -1,0 +1,70 @@
+name: sustainable_travel_app
+description: A sustainable travel planning app
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.10.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Map packages
+  flutter_map: ^6.1.0  # Using v6
+  latlong2: ^0.9.0
+  
+  # URL Launcher for deep linking (share functionality)
+  url_launcher: ^6.2.2
+  
+  # HTTP for API
+  http: ^1.1.0
+  
+  # Location
+  geolocator: ^11.0.0
+  
+  # Date formatting
+  intl: ^0.19.0
+  
+  # Storage
+  shared_preferences: ^2.2.2
+  
+  # Secure storage
+  flutter_secure_storage: ^9.0.0
+  
+  # State management
+  provider: ^6.1.1
+  
+  # Image picking
+  image_picker: ^1.2.1
+  permission_handler: ^12.0.1
+  
+  # NEW: ACO Algorithm Dependencies
+  collection: ^1.18.0  # For priority queues and efficient data structures
+  flutter_isolate: ^2.0.0  # For parallel processing of ACO
+  async: ^2.11.0  # For async utilities
+  tuple: ^2.0.2  # For returning multiple values from functions
+  quiver: ^3.2.1  # For caching and additional utilities
+  vector_math: ^2.1.4  # For mathematical operations
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+  flutter_launcher_icons: "^0.13.1"
+  # NEW: Development dependencies for testing ACO
+  benchmark_runner: ^2.0.0  # For performance benchmarking
+  test: ^1.24.0  # For unit testing ACO algorithms
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/electric_car.png
+    - assets/images/app_icon.ico
+    - assets/data/indian_ev_stations.json
+
+flutter_icons:
+  android: true  # Generate Android icons only
+  ios: false  
+  image_path: "assets/images/app_icon.ico"
+  adaptive_icon_background: "#4CAF50"
